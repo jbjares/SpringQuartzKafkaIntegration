@@ -14,8 +14,8 @@
 
 	<bean id="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean"> 
 		<property name="jobDetail" ref="simpleJobDetail" />
-		<property name="startDelay" value="10000" /> 
-		<property name="repeatInterval" value="100000" /> 
+		<property name="startDelay" value="1000" /> 
+		<property name="repeatInterval" value="10000" /> 
 	</bean>
 	
 			<bean  class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
