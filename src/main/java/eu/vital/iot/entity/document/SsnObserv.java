@@ -1,8 +1,9 @@
 package eu.vital.iot.entity.document;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.google.gson.annotations.Expose;
@@ -16,18 +17,26 @@ public class SsnObserv implements Serializable {
 	@SerializedName("type")
 	@Expose
 	private String type;
-	@SerializedName("id")
-	@Expose
-	private ObjectId _id;
 	
 	private String sensorName;
 	
 	private String property;
 
 	private String contextID;
+	
+	private List<Observation> observationList = new ArrayList<Observation>();
 
 	
 	
+	
+	public List<Observation> getObservationList() {
+		return observationList;
+	}
+
+	public void setObservationList(List<Observation> observationList) {
+		this.observationList = observationList;
+	}
+
 	public String getSensorName() {
 		return sensorName;
 	}
@@ -74,14 +83,5 @@ public class SsnObserv implements Serializable {
 		return this;
 	}
 
-	public ObjectId get_id() {
-		return _id;
-	}
-
-	public void set_id(ObjectId _id) {
-		this._id = _id;
-	}
-
-	
 
 }

@@ -23,6 +23,40 @@ public class TrafficObservationPOJO implements Serializable{
 	
 	private Date time;
 	
+	private String contextID;
+	
+	private String latitude;
+	
+	private String longitude;
+	
+	
+	
+	
+	
+	public String getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
+	}
+
+	public String getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
+	}
+
+	public String getContextID() {
+		return contextID;
+	}
+
+	public void setContextID(String contextID) {
+		this.contextID = contextID;
+	}
+	
 	private List<VitalSensorEventPOJO> sensorList;
 	
 

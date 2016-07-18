@@ -20,5 +20,7 @@ public interface HttpDAOConstants {
 	 String END_POINT_VITALSENSOR = "http://vital-integration.atosresearch.eu:8280/hireplyppi/sensor/metadata";
 	 String NO_CACHE = "no-cache";
 	 String TYPE_VITAL_VITAL_SENSOR = "{\"type\":[\"vital:VitalSensor\"]}";
-
+	 String HTTP_VITAL_INTEGRATION_ATOSRESEARCH_EU_8280_HIREPLYPPI_SENSOR_METADATA = "http://vital-integration.atosresearch.eu:8280/hireplyppi/sensor/metadata";
+	 String DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
+	 String TIME_IN_XSD_DATE_TIME = "{time:inXSDDateTime=";
 }

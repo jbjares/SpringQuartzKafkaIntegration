@@ -39,6 +39,8 @@ public class VitalSensor implements Serializable {
 	@Expose
 	private List<SsnObserv> ssnObserves = new ArrayList<SsnObserv>();
 	
+	@SerializedName("contextID")
+	@Expose
 	private String contextID;
 	
 	

@@ -21,9 +21,7 @@ public class Observation  implements Serializable {
     @SerializedName("@context")
     @Expose
     private String context;
-    @SerializedName("id")
-    @Expose
-    private String id;
+
     @SerializedName("type")
     @Expose
     private String type;
@@ -45,8 +43,17 @@ public class Observation  implements Serializable {
 
 	private String contextID;
 	
+	private String occurrence;
 	
 	
+	public String getOccurrence() {
+		return occurrence;
+	}
+
+	public void setOccurrence(String occurrence) {
+		this.occurrence = occurrence;
+	}
+
 	public String getContextID() {
 		return contextID;
 	}
@@ -81,23 +88,7 @@ public class Observation  implements Serializable {
         this.context = context;
     }
 
-    /**
-     * 
-     * @return
-     *     The id
-     */
-    public String getId() {
-        return id;
-    }
 
-    /**
-     * 
-     * @param id
-     *     The id
-     */
-    public void setId(String id) {
-        this.id = id;
-    }
 
     /**
      * 

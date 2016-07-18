@@ -15,9 +15,6 @@ public class SsnHasValue  implements Serializable {
 
 	private static final long serialVersionUID = -3066764951816872680L;
 
-	@SerializedName("id")
-	@Expose
-	private ObjectId _id;
 
     @SerializedName("type")
     @Expose
@@ -42,13 +39,6 @@ public class SsnHasValue  implements Serializable {
 	}
 	
 
-	public ObjectId get_id() {
-		return _id;
-	}
-
-	public void set_id(ObjectId _id) {
-		this._id = _id;
-	}
     /**
      * 
      * @return

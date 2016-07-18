@@ -15,20 +15,17 @@ public class DulHasLocation  implements Serializable {
 
 	private static final long serialVersionUID = -3066764951816872680L;
 
-	@SerializedName("id")
-	@Expose
-	private ObjectId _id;
 
     @SerializedName("type")
     @Expose
     private String type;
-    @SerializedName("geo:lat")
+    @SerializedName("geo_lat")
     @Expose
     private Double geoLat;
-    @SerializedName("geo:long")
+    @SerializedName("geo_long")
     @Expose
     private Double geoLong;
-    @SerializedName("geo:alt")
+    @SerializedName("geo_alt")
     @Expose
     private Double geoAlt;
 
@@ -42,15 +39,6 @@ public class DulHasLocation  implements Serializable {
 
 	public void setContextID(String contextID) {
 		this.contextID = contextID;
-	}
-	
-
-	public ObjectId get_id() {
-		return _id;
-	}
-
-	public void set_id(ObjectId _id) {
-		this._id = _id;
 	}
 	
     /**
