@@ -27,7 +27,7 @@ public class KafkaEvents {
 	public KafkaEvents() {
 	}
 
-	@PostConstruct
+	//PostConstruct
 	public void initIt() {
 		Properties kafkaProps = new Properties();
 
