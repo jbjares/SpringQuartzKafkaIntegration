@@ -5,7 +5,7 @@ import javax.inject.Inject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import eu.vital.iot.business.TrafficEventBusiness;
+import eu.vital.iot.business.TrafficEventService;
 import eu.vital.iot.executor.kafka.KafkaEvents;
 
 @Component("eventGenerator")
@@ -17,7 +17,7 @@ public class EventGenerator {
 	private KafkaEvents kafkaEvents;
 
 	@Inject
-	private TrafficEventBusiness trafficEventBusiness;
+	private TrafficEventService trafficEventBusiness;
 
 	public void doStuff() throws Exception {
 

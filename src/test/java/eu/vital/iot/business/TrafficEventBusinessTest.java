@@ -1,5 +1,6 @@
 package eu.vital.iot.business;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +13,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import eu.vital.iot.business.to.TrafficEventBusinessTO;
+import eu.vital.iot.business.to.ClusteredMarkersTO;
 import eu.vital.iot.dao.http.SensorHttpDAO;
 import eu.vital.iot.dao.mongo.LogRealTimeEventMongoDAO;
 import eu.vital.iot.entity.document.VitalSensor;
@@ -29,7 +30,7 @@ public class TrafficEventBusinessTest {
 	private LogRealTimeEventMongoDAO logRealTimeEventDAO;
 	
 	@Inject
-	private TrafficEventBusiness trafficEventBusiness;
+	private TrafficEventService trafficEventBusiness;
 	
 	
 	@Test 
@@ -38,7 +39,7 @@ public class TrafficEventBusinessTest {
 		Assert.assertNotNull(logRealTimeEventDAO);
 	}
 	
-	@Ignore
+	//@Ignore
 	@Test
 	public void testLogRealTimeEvents() throws Exception{
 		List<VitalSensor> vitalSensorList = sensorHttpDAO.getVitalSensorList(null,null,null,null,null);
@@ -46,14 +47,24 @@ public class TrafficEventBusinessTest {
 		System.out.println(vitalSensorList.size());
 	}
 
-	@Test
-	public void testStreetName() throws Exception{
-		Map<String,List<TrafficEventBusinessTO>> map = trafficEventBusiness.getMarkersByStreetName();
-		for(Map.Entry<String,List<TrafficEventBusinessTO>> entry:map.entrySet()){
-			System.out.println(entry.getKey());
-			System.out.println(entry.getValue());
-			System.out.println("\n");
-		}
-	}
+
+	
+
+//	@Ignore
+//	@Test
+//	public void testStreetName() throws Exception{
+//		List<ClusteredMarkersTO> list = trafficEventBusiness.getClusters();
+//		System.out.println(list.size());
+//		Map<String, Integer> names= new HashMap<String, Integer>();
+//		for(ClusteredMarkersTO cm:list){
+//			if(names.containsKey(cm.getStreetName())){
+//				names.put(cm.getStreetName(),cm.getCount()+1);
+//			}else{
+//				names.put(cm.getStreetName(),1);
+//			}
+//			
+//		}
+//		System.out.println(names);
+//	}
 	
 }

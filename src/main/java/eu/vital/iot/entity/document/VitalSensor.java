@@ -43,8 +43,30 @@ public class VitalSensor implements Serializable {
 	@Expose
 	private String contextID;
 	
+	private TrafficEvent trafficEventBusiness;
 	
 	
+	private String locationName;
+	
+	
+	
+	
+	public String getLocationName() {
+		return locationName;
+	}
+
+	public void setLocationName(String locationName) {
+		this.locationName = locationName;
+	}
+
+	public TrafficEvent getTrafficEventBusiness() {
+		return trafficEventBusiness;
+	}
+
+	public void setTrafficEventBusiness(TrafficEvent trafficEventBusiness) {
+		this.trafficEventBusiness = trafficEventBusiness;
+	}
+
 	public String getContextID() {
 		return contextID;
 	}

@@ -9,6 +9,7 @@ import javax.inject.Inject;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -25,23 +26,6 @@ import eu.vital.iot.entity.document.VitalSensor;
 public class VitalSensorMongoDAOTest {
 	
 	
-//	public List<VitalSensor> findCachedVitalSensorListByGenericParameters(String contextID, Map<String,String> parameters){
-//		Query query = new Query();
-//		if(parameters==null || parameters.isEmpty()){
-//			return Collections.EMPTY_LIST;
-//		}
-//		query.addCriteria(
-//				Criteria.where("contextID").regex(contextID, "i"));
-//		for(Map.Entry<String,String> entry:parameters.entrySet()){
-//			query.addCriteria(
-//					Criteria.where(entry.getKey()).regex(entry.getValue(), "i"));	
-//		}
-//		
-//		List<VitalSensor> vitalSensorCache = mongoOperations.find(query, VitalSensor.class,VitalSensor.class.getSimpleName());
-//
-//		return vitalSensorCache;
-//	}
-	
 	@Inject
 	private VitalSensorMongoDAO vitalSensorMongoDAO;
 	
@@ -50,7 +34,8 @@ public class VitalSensorMongoDAOTest {
 	public void testInjection(){
 		Assert.assertNotNull(vitalSensorMongoDAO);
 	}
-	
+
+	@Ignore
 	@Test
 	public void testVitalSensorList() throws Exception{
 
@@ -63,6 +48,23 @@ public class VitalSensorMongoDAOTest {
 				System.out.println(vs.getSsnObserves().get(i).getObservationList().get(i).getSsnObservationResult().getSsnHasValue().getValue());				
 			}
 		}
+	}
+
+	@Test
+	public void testVitalSensorCluster() throws Exception{
+
+			Map<String,String> parameters = new HashMap<String,String>();
+			parameters.put("type", "vital:VitalSensor");
+			//parameters.put("status", "vital:Running");        	
+			Map<String,List<VitalSensor>> cached = vitalSensorMongoDAO.findCachedVitalSensorListByGenericParametersGroupByStreet(parameters);
+			
+			for(Map.Entry<String,List<VitalSensor>> entry:cached.entrySet()){
+				System.out.println(entry.getKey());
+				System.out.println(entry.getValue());
+				System.out.println(entry.getValue().size());
+				System.out.println("\n");
+			}
+		
 	}
 
 

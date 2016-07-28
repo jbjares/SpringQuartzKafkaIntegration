@@ -2,7 +2,6 @@ package eu.vital.iot.dao.http;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,14 +9,14 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import org.junit.Test;
+import javax.inject.Inject;
+
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.google.gson.Gson;
@@ -31,13 +30,15 @@ import eu.vital.iot.entity.document.SsnHasValue;
 import eu.vital.iot.entity.document.SsnObserv;
 import eu.vital.iot.entity.document.SsnObservationResult;
 import eu.vital.iot.entity.document.SsnObservationResultTime;
+import eu.vital.iot.entity.document.TrafficEvent;
 import eu.vital.iot.entity.document.VitalSensor;
-import eu.vital.iot.entity.pojo.VitalSensorEventPOJO;
 
 @Repository
 public class SensorHttpDAO implements HttpDAOConstants{
 
 	
+		@Inject
+		private ReverseLocationHttpDAO reverseLocationHttpDAO; 
 	
 		private static final String ONE = "1";
 		private static final String SSN_OBSERVATION_RESULT_TIME = "ssn:observationResultTime";
@@ -75,13 +76,12 @@ public class SensorHttpDAO implements HttpDAOConstants{
 			vitalSensor.setDescription(vsMap.get(DESCRIPTION).toString());
 			vitalSensor.setName(vsMap.get(NAME).toString());
 			vitalSensor.setStatus(vsMap.get(STATUS).toString());
-			
+
 
 			LinkedTreeMap hasLastKnownLocationTreeMap = (LinkedTreeMap) vsMap.get(HAS_LAST_KNOWN_LOCATION);
 
 			if (hasLastKnownLocationTreeMap != null) {
-				List<HasLastKnownLocation> hlklList = getHasLastlocation(hasLastKnownLocationTreeMap
-						.toString());
+				List<HasLastKnownLocation> hlklList = getHasLastlocation(hasLastKnownLocationTreeMap.toString(),vitalSensor);
 
 			}
 			
@@ -94,7 +94,7 @@ public class SensorHttpDAO implements HttpDAOConstants{
 
 			if(countObs<=vitalSensor.getSsnObserves().size()){
 				ssnObserv = vitalSensor.getSsnObserves().get(countObs-1);
-				fillObservsations(ssnObserv);
+				fillObservsations(ssnObserv,vitalSensor);
 				vitalSensor.setContextID(ssnObserv.getContextID());
 				countObs++;
 				vitalsensorList.add(vitalSensor);
@@ -103,6 +103,7 @@ public class SensorHttpDAO implements HttpDAOConstants{
 					getVitalSensorList(vitalsensorList,vsMapList,vitalSensor.getSsnObserves().get(countObs-1),countObs,countVsMap);							
 				}
 			}
+
 			
 			if(countObs>vitalSensor.getSsnObserves().size()){
 				countObs = 1;
@@ -159,7 +160,7 @@ public class SensorHttpDAO implements HttpDAOConstants{
 			return result;
 		}
 
-		private List<HasLastKnownLocation> getHasLastlocation(String responseBody)
+		private List<HasLastKnownLocation> getHasLastlocation(String responseBody,VitalSensor vitalSensor)
 				throws IOException {
 			List<HasLastKnownLocation> hasLastKnownLocationList = new ArrayList<HasLastKnownLocation>();
 			String hlklAsStr = responseBody.replace(":", "_");
@@ -189,13 +190,15 @@ public class SensorHttpDAO implements HttpDAOConstants{
 
 					hasLastKnownLocation.setType(type);
 					String latStr = geoLat != null ? geoLat : "";
-					if (!"".equals(latStr) && latStr != null) {
-						hasLastKnownLocation.setGeoLat(new Double(latStr));
+					if ("".equals(latStr) || latStr == null) {
+						return Collections.EMPTY_LIST;
 					}
+					hasLastKnownLocation.setGeoLat(new Double(latStr));
 					String longStr = geoLong != null ? geoLong : "";
-					if (!"".equals(longStr) && longStr != null) {
-						hasLastKnownLocation.setGeoLong(new Double(geoLong));
+					if ("".equals(longStr) || longStr == null) {
+						return Collections.EMPTY_LIST;
 					}
+					hasLastKnownLocation.setGeoLong(new Double(geoLong));
 
 					hasLastKnownLocationList.add(hasLastKnownLocation);
 				}
@@ -204,7 +207,7 @@ public class SensorHttpDAO implements HttpDAOConstants{
 		}
 
 		
-		public void fillObservsations(SsnObserv ssnobs) throws Exception{
+		public void fillObservsations(SsnObserv ssnobs,VitalSensor vitalSensor) throws Exception{
 			RestTemplate restTemplate = new RestTemplate();
 			HttpHeaders headers = new HttpHeaders();
 			headers.setCacheControl(NO_CACHE);
@@ -240,7 +243,7 @@ public class SensorHttpDAO implements HttpDAOConstants{
 				String ssn_observationResultTime= obsLinkedTreeMap.get(SSN_OBSERVATION_RESULT_TIME).toString();//{time:inXSDDateTime=2016-07-15T19:03:00Z}
 
 				SsnObservationResult ssnObservationResult = fillSsnObservationResult(ssn_observationResult);
-				DulHasLocation dulHasLocation = fillDulHasLocation(dul_hasLocation);
+				DulHasLocation dulHasLocation = fillDulHasLocation(dul_hasLocation,vitalSensor);
 				
 				ssn_observationResultTime = ssn_observationResultTime.substring(ssn_observationResultTime.indexOf(TIME_IN_XSD_DATE_TIME)+TIME_IN_XSD_DATE_TIME.length(),ssn_observationResultTime.lastIndexOf("}"));
 				SsnObservationResultTime observationResultTime = new SsnObservationResultTime();
@@ -264,13 +267,16 @@ public class SensorHttpDAO implements HttpDAOConstants{
 
 
 
-		private DulHasLocation fillDulHasLocation(String dul_hasLocation) {
+		private DulHasLocation fillDulHasLocation(String dul_hasLocation,VitalSensor vitalSensor) {
 			String ssnHasValueStr = dul_hasLocation.replace(":", "_");
 			ssnHasValueStr = ssnHasValueStr.replace("=", ":");
 			Gson gson = new Gson();
 			JsonReader reader = new JsonReader(new StringReader(ssnHasValueStr));
 			reader.setLenient(true);
 			DulHasLocation dulHasLocation = gson.fromJson(reader, DulHasLocation.class);
+			String street = null;
+			street = reverseLocationHttpDAO.getStreetName(dulHasLocation.getGeoLat().toString(), dulHasLocation.getGeoLong().toString());				
+			vitalSensor.setTrafficEventBusiness(new TrafficEvent(dulHasLocation.getGeoLat().toString(), dulHasLocation.getGeoLong().toString(),street));
 			return dulHasLocation;
 		}
 

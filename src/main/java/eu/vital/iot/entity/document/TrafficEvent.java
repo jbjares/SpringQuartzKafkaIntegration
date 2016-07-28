@@ -1,12 +1,11 @@
-package eu.vital.iot.business.to;
+package eu.vital.iot.entity.document;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-public class TrafficEventBusinessTO implements Serializable{
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document
+public class TrafficEvent implements Serializable{
 
 	private static final long serialVersionUID = -9202555371560615373L;
 
@@ -19,11 +18,16 @@ public class TrafficEventBusinessTO implements Serializable{
 	private String streetName = new String();
 	
 	private Integer occurrence;
-	
-	private Map<String,List<TrafficEventBusinessTO>> map = new HashMap<String, List<TrafficEventBusinessTO>>();
 
+
+	public TrafficEvent(String latStr, String longStr, String street) {
+		this.lat = latStr;
+		this.lon = longStr;
+		this.streetName = street;
+	}
 	
-	
+	public TrafficEvent() {}
+
 	public Integer getOccurrence() {
 		return occurrence;
 	}
@@ -63,15 +67,6 @@ public class TrafficEventBusinessTO implements Serializable{
 	public void setStreetName(String streetName) {
 		this.streetName = streetName;
 	}
-
-	public Map<String, List<TrafficEventBusinessTO>> getMap() {
-		return map;
-	}
-
-	public void setMap(Map<String, List<TrafficEventBusinessTO>> map) {
-		this.map = map;
-	}
-
 
 
 	
